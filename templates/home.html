@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Crowd Counter</title>
+</head>
+ 
+<body onload="display_ct(); getTableData();">
+	
+	<h1>Crowd Counter</h1>
+	<span id='time' ></span>
+
+	
+	<table id="yourTable" border = 1>
+		<thead>
+			<td>Location</td>
+			<td>Max Occupancy</td>
+			<td>Count</td>
+		</thead>
+		 	<tr>
+			</tr>
+	</table>
+	  
+	
+	<form action="/login" >
+		<button type="submit">Add A Camera</button>
+	</form>
+	
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript"> 
+
+function refresh_time(){
+	var refresh=1000; 
+	mytime=setTimeout('display_ct()',refresh)
+}
+
+function display_ct() {
+	var x = new Date()
+	document.getElementById('time').innerHTML = x;
+	refresh_time();
+}
+ 
+function refresh_table(){
+	var refresh=5000; // Refresh rate every 5 seconds
+	mytime=setTimeout('getTableData()',refresh)
+}
+
+
+function getTableData() {
+	$.ajax({
+		url: "/get_table_data", 
+		dataType: "json",
+		method : 'GET',
+		success : function(data){
+			$('#yourTable tbody').html("");
+			for (var i = 0; i < data.length; i++) {
+				tr = $('<tr>');
+				tr.append("<td>" + data[i].location+ "</td>");
+				tr.append("<td>" + data[i].max_occupancy+ "</td>");
+				tr.append("<td>" + data[i].count+ "</td>");
+				tr.append("</tr>");
+				$('#yourTable tbody').append(tr);
+			}               
+		}  
+    })
+	refresh_table()	
+}
+
+</script>
+
+
+</html>

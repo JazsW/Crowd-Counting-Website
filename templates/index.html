@@ -6,19 +6,19 @@
 <style>
 #container {
 	margin: 0px auto;
-	width: 1000px;
-	height: 750px;
+	width:  600px;
+	height: 600px;
 	border: 10px #333 solid;
 }
 #videoElement {
-	width: 1000px;
-	height: 750px;
+	width:  600px;
+	height: 600px;
 	background-color: #666;
 }
 </style>
 </head>
  
-<body onload="display_ct(); photoTaken();">
+<body onload="display_ct(); display_camera();">
 	
 	<h1>Crowd Counter</h1>
 	<span id='time' ></span>
@@ -29,13 +29,13 @@
 	</div>
 	
 	<p style="display:inline">Crowd count: </p>
-	<p id="div1" style="display:inline"> </p>
-
+	<p id="div1" style="display:inline">Loading... </p>
+	
+	<form action="/logout" >
+		<button type="submit">Back to home Page</button>
+	</form>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
-
 <script type="text/javascript"> 
 
 function display_camera(){
@@ -55,10 +55,6 @@ function display_ct() {
  }
 
 
-
-
-	
-
 // Get access to the camera!
 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
@@ -75,10 +71,10 @@ var video = document.getElementById('video');
 
 function photoTaken() {
 	context.drawImage(video, 0, 0, 640, 480);
-	var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  
+	var image = canvas.toDataURL("image/jpg")//("image/png").replace("image/png", "image/octet-stream");  
     $.ajax({
 	    type : 'POST',
-		url: "/background_process_test", 
+		url: "/get_count", 
 		data: {imageBase64: image},
 		success: function(result){$("#div1").html(result);}
 	});
